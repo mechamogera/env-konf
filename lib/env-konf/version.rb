@@ -1,5 +1,3 @@
-module Env
-  module Konf
-    VERSION = "0.0.1"
-  end
+module EnvKonf
+  VERSION = "0.0.1"
 end

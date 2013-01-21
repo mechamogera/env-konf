@@ -5,7 +5,7 @@ require 'env-konf/version'
 
 Gem::Specification.new do |gem|
   gem.name          = "env-konf"
-  gem.version       = Env::Konf::VERSION
+  gem.version       = EnvKonf::VERSION
   gem.authors       = ["mechamogera"]
   gem.email         = ["mechamosura@gmail.com"]
   gem.description   = %q{Write a gem description}
@@ -16,4 +16,6 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+
+  gem.add_development_dependency "rspec"
 end
