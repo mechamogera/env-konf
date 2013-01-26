@@ -5,18 +5,21 @@ module EnvKonf
   Directory = File.expand_path(File.join("~", ".env_konf"))
                        
   def self.get(options = {})
-    self.load
-  end
-
-  def self.switch(name, options)
-    @profile = File.join(Directory, "#{name}.yaml")
-  end
-
-  private
-
-  def self.load
     FileUtils.mkdir_p(Directory) unless File.exist?(Directory)
-    @profile ||= File.join(Directory, "default.yaml")
-    File.exist?(@profile) ? YAML.load_file(@profile) : nil
+    path = profile_path(options[:profile] || @profile)
+    File.exist?(path) ? YAML.load_file(path) : nil
+  end
+
+  def self.switch(name = nil, options = {})
+    @profile = name
+  end
+
+  def self.profile
+    @profile || "default"
+  end
+
+  def self.profile_path(profile = nil)
+    profile = profile || @profile || "default"
+    File.join(Directory, "#{profile}.yaml")
   end
 end
