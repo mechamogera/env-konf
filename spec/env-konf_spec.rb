@@ -21,7 +21,7 @@ describe EnvKonf do
     File.should_receive(:exist?).with(EnvKonf::Directory).and_return(true)
     File.should_receive(:exist?).with(profile_path).and_return(false)
 
-    EnvKonf.get.should == nil
+    EnvKonf.get.should be_nil
   end
 
   it "should get switch profile" do
@@ -31,7 +31,7 @@ describe EnvKonf do
     File.should_receive(:exist?).with(profile_path).and_return(false)
 
     EnvKonf.switch(profile_name)
-    EnvKonf.get.should == nil
+    EnvKonf.get.should be_nil
   end
 
   it "should mkdir base dir if no exist" do
@@ -40,6 +40,6 @@ describe EnvKonf do
     FileUtils.should_receive(:mkdir_p).with(EnvKonf::Directory).and_return(true)
     File.should_receive(:exist?).with(profile_path).and_return(false)
 
-    EnvKonf.get.should == nil
+    EnvKonf.get.should be_nil
   end
 end

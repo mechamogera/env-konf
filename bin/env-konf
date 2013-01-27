@@ -1,0 +1,123 @@
+#! /usr/bin/env ruby
+# vim:ft=ruby:
+# ruby -Ilib bin/cipher-conf
+
+require 'optparse'
+require 'env-konf'
+require 'highline'
+
+class EnvKonfCommand
+  VERSION = EnvKonf::VERSION
+  NAME = "env-konf"
+
+  def self.run(argv)
+    new(argv.dup).run
+  end
+
+  def initialize(argv)
+    @password = nil
+    @argv = argv
+
+    @subparsers = {
+       "help" => OptionParser.new { |opt|
+          opt.banner = <<-EOB
+Usage: #{NAME} help <subcommand>
+
+Show help of subcommand.
+          EOB
+       },
+       "encode" => OptionParser.new { |opt|
+          opt.banner = <<-EOB
+Usage: #{NAME} encode <zippath>
+
+Encode current profile to <zippath>
+          EOB
+
+          opt.separator ""
+
+          opt.separator "Options:"
+          opt.on("-p", "--password=VAL", "Specify encoding password") { |v| @password = v }
+       },
+       "decode" => OptionParser.new { |opt|
+          opt.banner = <<-EOB
+Usage: #{NAME} decode <zippath>
+
+Decode from <zippath> to pit directory
+          EOB
+
+          opt.separator ""
+
+          opt.separator "Options:"
+          opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @password = v }
+       },
+    }
+
+    @parser = OptionParser.new do |parser|
+      parser.banner = <<-EOB
+Usage: #{NAME} <subcommand> <args>
+      EOB
+
+      parser.separator ""
+
+      parser.separator "Subcommands:"
+      @subparsers.keys.sort.each do |k|
+        parser.separator "#{parser.summary_indent}    #{k}"
+      end
+
+      parser.separator ""
+
+      parser.separator "Options:"
+      parser.on('--version', "Show version string `#{VERSION}'") do
+        puts VERSION
+        exit
+      end
+    end
+  end
+
+  def run
+    @parser.order!(@argv)
+    if @argv.empty?
+      puts @parser.help
+      exit
+    end
+
+    @subcommand = @argv.shift
+    method_name = "cmd_#{@subcommand}"
+    unless self.respond_to?(method_name)
+      raise ArgumentError.new("Not implemented subcommand: `#{@subcommand}'.")
+    end
+    
+    @subparsers[@subcommand].parse!(@argv)
+    self.send(method_name)
+  end
+
+  def cmd_help
+    subcommand, = @argv
+    if subcommand
+      if @subparsers.key?(subcommand)
+        puts @subparsers[subcommand].help
+      else
+        puts <<-EOB
+No such subcommand `#{subcommand}'
+#{@parser.help}
+        EOB
+      end
+    else
+      puts @parser.help
+    end
+  end
+
+  def cmd_encode
+    path, = @argv
+    @password = EnvKonf.input_password(:default => @password)
+    EnkKonf.encode(path, :password => @password)
+  end
+
+  def cmd_decode
+    path, = @argv
+    @password = EnvKonf.input_password(:default => @password, :check_twice => false)
+    EnvKonf.decode(path, :password => @password)
+  end
+end
+
+EnvKonfCommand.run(ARGV)
