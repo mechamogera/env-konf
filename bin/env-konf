@@ -15,7 +15,7 @@ class EnvKonfCommand
   end
 
   def initialize(argv)
-    @password = nil
+    @options = {}
     @argv = argv
 
     @subparsers = {
@@ -26,9 +26,9 @@ Usage: #{NAME} help <subcommand>
 Show help of subcommand.
           EOB
        },
-       "encode" => OptionParser.new { |opt|
+       "zip" => OptionParser.new { |opt|
           opt.banner = <<-EOB
-Usage: #{NAME} encode <zippath>
+Usage: #{NAME} zip <zippath>
 
 Encode current profile to <zippath>
           EOB
@@ -36,11 +36,12 @@ Encode current profile to <zippath>
           opt.separator ""
 
           opt.separator "Options:"
-          opt.on("-p", "--password=VAL", "Specify encoding password") { |v| @password = v }
+          opt.on("-p", "--password=VAL", "Specify encoding password") { |v| @options[:password] = v }
+          opt.on("--profile=VAL", "Specify profile") { |v| @options[:profile] = v }
        },
-       "decode" => OptionParser.new { |opt|
+       "unzip" => OptionParser.new { |opt|
           opt.banner = <<-EOB
-Usage: #{NAME} decode <zippath>
+Usage: #{NAME} unzip <zippath>
 
 Decode from <zippath> to pit directory
           EOB
@@ -48,7 +49,7 @@ Decode from <zippath> to pit directory
           opt.separator ""
 
           opt.separator "Options:"
-          opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @password = v }
+          opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @options[:password] = v }
        },
     }
 
@@ -107,16 +108,16 @@ No such subcommand `#{subcommand}'
     end
   end
 
-  def cmd_encode
+  def cmd_zip
     path, = @argv
-    @password = EnvKonf.input_password(:default => @password)
-    EnkKonf.encode(path, :password => @password)
+    @options[:path] = path
+    EnvKonf.zip(@options)
   end
 
-  def cmd_decode
+  def cmd_unzip
     path, = @argv
-    @password = EnvKonf.input_password(:default => @password, :check_twice => false)
-    EnvKonf.decode(path, :password => @password)
+    @options[:path] = path
+    EnvKonf.unzip(@options)
   end
 end
 

@@ -26,7 +26,7 @@ module EnvKonf
     File.join(Directory, "#{profile}.yaml")
   end
 
-  def self.encode(options = {})
+  def self.zip(options = {})
     path = options[:path]
     unless path
       path = EnvKonf::Config.zip_path
@@ -41,15 +41,15 @@ module EnvKonf
                               :profile => profile)
   end
 
-  def self.decode(options = {})
+  def self.unzip(options = {})
     path = options[:path]
     unless path
       path = EnvKonf::Config.zip_path
       raise  ArgumentError.new("Need decode zip path") unless path
     end
 
-    password = CipherConf.input_password(:default => options[:password], 
-                                         :check_twice => false)
+    password = EnvKonf::Input.input_password(:default => options[:password], 
+                                             :check_twice => false)
     profile = options[:profile] || EnvKonf::Config.profile
     EnvKonf::Zip.decode(path, :password => password,
                               :profile => profile)
