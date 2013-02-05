@@ -51,6 +51,20 @@ Decode from <zippath> to pit directory
           opt.separator "Options:"
           opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @options[:password] = v }
        },
+       "config" => OptionParser.new { |opt|
+         opt.banner = <<-EOB
+Usage: #{NAME} config
+
+Set configuration options
+         EOB
+
+         opt.separator ""
+
+         opt.separator "Options:"
+         opt.on("-p", "--encode-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
+         opt.on("-r", "--profile=VAL",  "Set profile") { |v| @options[:profile] = v }
+         opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:zip_path] = v }
+       },
     }
 
     @parser = OptionParser.new do |parser|
@@ -118,6 +132,12 @@ No such subcommand `#{subcommand}'
     path, = @argv
     @options[:path] = path
     EnvKonf.unzip(@options)
+  end
+
+  def cmd_config
+    EnvKonf::Config.passwd_md5 = @options[:check_password] if @options[:check_password]
+    EnvKonf::Config.zip_path = @options[:zip_path] if @options[:zip_path]
+    EnvKonf::Config.profile = @options[:profile] if @options[:profile]
   end
 end
 
