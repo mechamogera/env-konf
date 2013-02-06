@@ -5,7 +5,7 @@ require "env-konf/input"
 require 'yaml'
 
 module EnvKonf
-  Directory = File.expand_path(File.join("~", ".env_konf"))
+  Directory = File.expand_path(File.join("~", ".env-konf"))
                        
   def self.get(options = {})
     FileUtils.mkdir_p(Directory) unless File.exist?(Directory)
@@ -13,8 +13,17 @@ module EnvKonf
     File.exist?(path) ? YAML.load_file(path) : nil
   end
 
-  def self.switch(name = nil, options = {})
-    @profile = name
+  def self.profile_init(profile, options = {})
+    FileUtils.mkdir_p(Directory) unless File.exist?(Directory)
+    path = profile_path(profile || @profile)
+    raise ArgumentError.new("profile already exist") if File.exist?(path) && !options[:force]
+    File.open(path, "w") { |f| }
+
+    path
+  end
+
+  def self.profile=(profile)
+    @profile = profile
   end
 
   def self.profile

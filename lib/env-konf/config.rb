@@ -4,7 +4,7 @@ require 'digest/md5'
 
 module EnvKonf
   module Config
-    FILE = ".#{File.basename($0)}/config.yml"
+    FILE = ".env-konf/config.yml"
 
     class << self
       [:profile, :zip_path].each do |method|

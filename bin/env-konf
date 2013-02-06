@@ -51,9 +51,9 @@ Decode from <zippath> to pit directory
           opt.separator "Options:"
           opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @options[:password] = v }
        },
-       "config" => OptionParser.new { |opt|
+       "zip-config" => OptionParser.new { |opt|
          opt.banner = <<-EOB
-Usage: #{NAME} config
+Usage: #{NAME} zip-config
 
 Set configuration options
          EOB
@@ -64,6 +64,13 @@ Set configuration options
          opt.on("-p", "--encode-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
          opt.on("-r", "--profile=VAL",  "Set profile") { |v| @options[:profile] = v }
          opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:zip_path] = v }
+       },
+       "profile-init" => OptionParser.new { |opt|
+         opt.banner = <<-EOB
+Usage: #{NAME} profile-init <profile>
+
+create <profile>
+         EOB
        },
     }
 
@@ -97,7 +104,7 @@ Usage: #{NAME} <subcommand> <args>
     end
 
     @subcommand = @argv.shift
-    method_name = "cmd_#{@subcommand}"
+    method_name = "cmd_#{@subcommand.gsub("-", "_")}"
     unless self.respond_to?(method_name)
       raise ArgumentError.new("Not implemented subcommand: `#{@subcommand}'.")
     end
@@ -134,10 +141,16 @@ No such subcommand `#{subcommand}'
     EnvKonf.unzip(@options)
   end
 
-  def cmd_config
+  def cmd_zip_config
     EnvKonf::Config.passwd_md5 = @options[:check_password] if @options[:check_password]
     EnvKonf::Config.zip_path = @options[:zip_path] if @options[:zip_path]
     EnvKonf::Config.profile = @options[:profile] if @options[:profile]
+  end
+
+  def cmd_profile_init
+    profile, = @argv
+    path = EnvKonf.profile_init(profile)
+    puts "  create #{path}"
   end
 end
 
