@@ -16,7 +16,8 @@ describe EnvKonf::ZipProfile do
   end
 
   it "should save encode md5" do
-    Digest::MD5.should_receive(:file).twice.with(source).and_return(md5)
+    md5_obj = double("md5_obj", :hexdigest => md5)
+    Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
 
     mkdir_p_original = FileUtils.method(:mkdir_p)
     FileUtils.should_receive(:mkdir_p).with(
@@ -39,7 +40,8 @@ describe EnvKonf::ZipProfile do
   end
 
   it "should save decode md5" do
-    Digest::MD5.should_receive(:file).twice.with(source).and_return(md5)
+    md5_obj = double("md5_obj", :hexdigest => md5)
+    Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
 
     mkdir_p_original = FileUtils.method(:mkdir_p)
     FileUtils.should_receive(:mkdir_p).with(

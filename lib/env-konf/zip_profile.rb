@@ -4,22 +4,24 @@ require 'fileutils'
 
 module EnvKonf
   module ZipProfile
-    FILE = File.join(Directory, ".zip_profile")
+    FILE = File.expand_path(File.join("~", ".env-konf", ".zip_profile"))
 
     def self.save_encode_md5(profile, source)
-      write(profile, {:encode_md5 => Digest::MD5.file(source)})
+      write(profile, {:encode_md5 => Digest::MD5.file(source).hexdigest})
     end
 
     def self.save_decode_md5(profile, source)
-      write(profile, {:decode_md5 => Digest::MD5.file(source)})
+      write(profile, {:decode_md5 => Digest::MD5.file(source).hexdigest})
     end
 
     def self.match_encoded?(profile, source)
-      read[profile][:encode_md5] == Digest::MD5.file(source)
+      md5 = read[profile][:encode_md5] rescue nil
+      md5 == Digest::MD5.file(source).hexdigest
     end
 
     def self.match_decoded?(profile, source)
-      read[profile][:decode_md5] == Digest::MD5.file(source)
+      md5 = read[profile][:decode_md5]
+      md5 == Digest::MD5.file(source).hexdigest
     end
 
     private

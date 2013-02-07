@@ -1,6 +1,7 @@
 require "env-konf/version"
 require "env-konf/config"
 require "env-konf/zip"
+require "env-konf/zip_profile"
 require "env-konf/input"
 require 'yaml'
 
@@ -50,7 +51,7 @@ module EnvKonf
                                              :check_md5 => md5)
     EnvKonf::Zip.encode(path, :password => password,
                               :profile => profile)
-    EnkKonf::ZipProfile.save_encode_md5(profile, profile_path(profile))
+    EnvKonf::ZipProfile.save_encode_md5(profile, profile_path(profile))
   end
 
   def self.unzip(options = {})
@@ -61,7 +62,7 @@ module EnvKonf
     end
 
     profile = options[:profile] || EnvKonf::Config.profile
-    return if EnvKonf::ZipProfile.match_decoded?(profile, profile_path(profile)) unless options[:force]
+    return if EnvKonf::ZipProfile.match_decoded?(profile, path) unless options[:force]
 
     password = EnvKonf::Input.input_password(:default => options[:password], 
                                              :check_twice => false)
