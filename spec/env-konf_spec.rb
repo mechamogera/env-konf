@@ -3,7 +3,7 @@ require File.expand_path('../lib/env-konf', File.dirname(__FILE__))
 
 describe EnvKonf do
   before :each do
-    EnvKonf.switch
+    EnvKonf.profile = nil
   end
 
   it "should get if profile exist" do
@@ -30,7 +30,7 @@ describe EnvKonf do
     File.should_receive(:exist?).with(EnvKonf::Directory).and_return(true)
     File.should_receive(:exist?).with(profile_path).and_return(false)
 
-    EnvKonf.switch(profile_name)
+    EnvKonf.profile = profile_name
     EnvKonf.get.should be_nil
   end
 

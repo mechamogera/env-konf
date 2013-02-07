@@ -6,20 +6,20 @@ module EnvKonf
   module ZipProfile
     FILE = File.join(Directory, ".zip_profile")
 
-    def self.save_encode_md5(source)
-      write(:encode_md5, Digest::MD5.file(source))
+    def self.save_encode_md5(profile, source)
+      write(profile, {:encode_md5 => Digest::MD5.file(source)})
     end
 
-    def self.save_decode_md5(source)
-      write(:decode_md5, Digest::MD5.file(source))
+    def self.save_decode_md5(profile, source)
+      write(profile, {:decode_md5 => Digest::MD5.file(source)})
     end
 
-    def self.match_encoded?(source)
-      read[:encode_md5] == Digest::MD5.file(source)
+    def self.match_encoded?(profile, source)
+      read[profile][:encode_md5] == Digest::MD5.file(source)
     end
 
-    def self.match_decoded?(source)
-      read[:decode_md5] == Digest::MD5.file(source)
+    def self.match_decoded?(profile, source)
+      read[profile][:decode_md5] == Digest::MD5.file(source)
     end
 
     private

@@ -42,12 +42,15 @@ module EnvKonf
       raise  ArgumentError.new("Need encode zip path") unless path
     end
 
+    profile = options[:profile] || EnvKonf::Config.profile
+    return if EnvKonf::ZipProfile.match_encoded?(profile, profile_path(profile)) unless options[:force]
+
     md5 = EnvKonf::Config.passwd_md5
     password = EnvKonf::Input.input_password(:default => options[:password], 
                                              :check_md5 => md5)
-    profile = options[:profile] || EnvKonf::Config.profile
     EnvKonf::Zip.encode(path, :password => password,
                               :profile => profile)
+    EnkKonf::ZipProfile.save_encode_md5(profile, profile_path(profile))
   end
 
   def self.unzip(options = {})
@@ -57,10 +60,13 @@ module EnvKonf
       raise  ArgumentError.new("Need decode zip path") unless path
     end
 
+    profile = options[:profile] || EnvKonf::Config.profile
+    return if EnvKonf::ZipProfile.match_decoded?(profile, profile_path(profile)) unless options[:force]
+
     password = EnvKonf::Input.input_password(:default => options[:password], 
                                              :check_twice => false)
-    profile = options[:profile] || EnvKonf::Config.profile
     EnvKonf::Zip.decode(path, :password => password,
                               :profile => profile)
+    EnvKonf::ZipProfile.save_decode_md5(profile, path)
   end
 end
