@@ -15,12 +15,14 @@ module EnvKonf
     end
 
     def self.match_encoded?(profile, source)
-      md5 = read[profile][:encode_md5] rescue nil
+      data = read[profile]
+      md5 = data ? data[:encode_md5] : nil
       md5 == Digest::MD5.file(source).hexdigest
     end
 
     def self.match_decoded?(profile, source)
-      md5 = read[profile][:decode_md5]
+      data = read[profile]
+      md5 = data ? data[:decode_md5] : nil
       md5 == Digest::MD5.file(source).hexdigest
     end
 

@@ -15,6 +15,14 @@ describe EnvKonf::ZipProfile do
     end
   end
 
+  it "should not match if no exist record" do
+    md5_obj = double("md5_obj", :hexdigest => md5)
+    Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
+
+    EnvKonf::ZipProfile.match_encoded?(profile, source).should be_false
+    EnvKonf::ZipProfile.match_decoded?(profile, source).should be_false
+  end
+
   it "should save encode md5" do
     md5_obj = double("md5_obj", :hexdigest => md5)
     Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
