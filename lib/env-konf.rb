@@ -1,5 +1,5 @@
 require "env-konf/version"
-require "env-konf/config"
+require "env-konf/zip_config"
 require "env-konf/zip"
 require "env-konf/zip_profile"
 require "env-konf/input"
@@ -39,14 +39,14 @@ module EnvKonf
   def self.zip(options = {})
     path = options[:path]
     unless path
-      path = EnvKonf::Config.zip_path
+      path = EnvKonf::ZipConfig.zip_path
       raise  ArgumentError.new("Need encode zip path") unless path
     end
 
-    profile = options[:profile] || EnvKonf::Config.profile
+    profile = options[:profile] || EnvKonf::ZipConfig.profile
     return if EnvKonf::ZipProfile.match_encoded?(profile, profile_path(profile)) unless options[:force]
 
-    md5 = EnvKonf::Config.passwd_md5
+    md5 = EnvKonf::ZipConfig.passwd_md5
     password = EnvKonf::Input.input_password(:default => options[:password], 
                                              :check_md5 => md5)
     EnvKonf::Zip.encode(path, :password => password,
@@ -57,11 +57,11 @@ module EnvKonf
   def self.unzip(options = {})
     path = options[:path]
     unless path
-      path = EnvKonf::Config.zip_path
+      path = EnvKonf::ZipConfig.zip_path
       raise  ArgumentError.new("Need decode zip path") unless path
     end
 
-    profile = options[:profile] || EnvKonf::Config.profile
+    profile = options[:profile] || EnvKonf::ZipConfig.profile
     return if EnvKonf::ZipProfile.match_decoded?(profile, path) unless options[:force]
 
     password = EnvKonf::Input.input_password(:default => options[:password], 

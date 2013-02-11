@@ -38,6 +38,7 @@ Encode current profile to <zippath>
           opt.separator "Options:"
           opt.on("-p", "--password=VAL", "Specify encoding password") { |v| @options[:password] = v }
           opt.on("--profile=VAL", "Specify profile") { |v| @options[:profile] = v }
+          opt.on("-f", "--force", "Zip forced") { @options[:force] = true }
        },
        "unzip" => OptionParser.new { |opt|
           opt.banner = <<-EOB
@@ -50,6 +51,7 @@ Decode from <zippath> to pit directory
 
           opt.separator "Options:"
           opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @options[:password] = v }
+          opt.on("-f", "--force", "Zip forced") { @options[:force] = true }
        },
        "zip-config" => OptionParser.new { |opt|
          opt.banner = <<-EOB

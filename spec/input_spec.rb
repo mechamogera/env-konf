@@ -3,7 +3,7 @@ require File.expand_path('../lib/env-konf/input', File.dirname(__FILE__))
 require 'tmpdir'
 require 'fileutils'
 
-describe EnvKonf::Config do
+describe EnvKonf::Input do
   it "should get input password" do
     password = "password"
     HighLine.any_instance.stub(:ask).with(any_args).and_return(password)

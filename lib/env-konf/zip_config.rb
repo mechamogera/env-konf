@@ -3,7 +3,7 @@ require 'yaml/store'
 require 'digest/md5'
 
 module EnvKonf
-  module Config
+  module ZipConfig
     FILE = ".env-konf/config.yml"
 
     class << self
