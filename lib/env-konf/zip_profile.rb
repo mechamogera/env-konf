@@ -1,10 +1,11 @@
 require 'digest/md5'
 require 'yaml'
 require 'fileutils'
+require File.expand_path('config', File.dirname(__FILE__))
 
 module EnvKonf
   module ZipProfile
-    FILE = File.expand_path(File.join("~", ".env-konf", ".zip_profile"))
+    FILE = File.join(::EnvKonf::Config.directory, ".zip_profile")
 
     def self.save_encode_md5(profile, source)
       write(profile, {:encode_md5 => Digest::MD5.file(source).hexdigest})

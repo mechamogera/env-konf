@@ -3,19 +3,18 @@ require "env-konf/zip_config"
 require "env-konf/zip"
 require "env-konf/zip_profile"
 require "env-konf/input"
+require "env-konf/config"
 require 'yaml'
 
 module EnvKonf
-  Directory = File.expand_path(File.join("~", ".env-konf"))
-                       
   def self.get(options = {})
-    FileUtils.mkdir_p(Directory) unless File.exist?(Directory)
+    FileUtils.mkdir_p(Config.directory) unless File.exist?(Config.directory)
     path = profile_path(options[:profile] || @profile)
     File.exist?(path) ? YAML.load_file(path) : nil
   end
 
   def self.profile_init(profile, options = {})
-    FileUtils.mkdir_p(Directory) unless File.exist?(Directory)
+    FileUtils.mkdir_p(Config.directory) unless File.exist?(Config.directory)
     path = profile_path(profile || @profile)
     raise ArgumentError.new("profile already exist") if File.exist?(path) && !options[:force]
     File.open(path, "w") { |f| }
@@ -33,7 +32,7 @@ module EnvKonf
 
   def self.profile_path(profile = nil)
     profile = profile || @profile || "default"
-    File.join(Directory, "#{profile}.yaml")
+    File.join(Config.directory, "#{profile}.yaml")
   end
 
   def self.zip(options = {})

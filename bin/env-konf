@@ -156,4 +156,6 @@ No such subcommand `#{subcommand}'
   end
 end
 
-EnvKonfCommand.run(ARGV)
+if __FILE__ == $0
+  EnvKonfCommand.run(ARGV)
+end
