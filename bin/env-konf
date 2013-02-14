@@ -63,7 +63,7 @@ Set configuration options
          opt.separator ""
 
          opt.separator "Options:"
-         opt.on("-p", "--encode-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
+         opt.on("-p", "--check-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
          opt.on("-r", "--profile=VAL",  "Set profile") { |v| @options[:profile] = v }
          opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:zip_path] = v }
        },

@@ -4,8 +4,13 @@ require 'fileutils'
 require File.expand_path('config', File.dirname(__FILE__))
 
 module EnvKonf
-  module ZipProfile
-    FILE = File.join(::EnvKonf::Config.directory, ".zip_profile")
+  module ProfileHist
+    Directory = File.expand_path(File.join("~", ".env-konf"))
+    FILE = File.join(Directory, ".profile_hist")
+
+    def self.directory
+      Directory
+    end
 
     def self.save_encode_md5(profile, source)
       write(profile, {:encode_md5 => Digest::MD5.file(source).hexdigest})

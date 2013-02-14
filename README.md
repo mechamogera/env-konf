@@ -26,7 +26,7 @@ $ env-konf profile-init test
   create /home/hoge/.env-konf/test.yaml
 ```
 
-## get profile value at your source code
+### get profile value at your source code
 
 ```
 require 'env-konf'
@@ -35,7 +35,7 @@ EnvKonf.profile = "test"
 p EnvKonf.get
 ```
 
-## create profile zip protected password
+### create profile zip protected password
 
 ```
 $ env-konf zip test.zip --profile test
@@ -43,15 +43,19 @@ Password: ********
 Retype password: ********
 ```
 
-## unzip profile zip
+### unzip profile zip
 
 ```
 $ env-konf unzip test.zip
 Password: ********
 ```
 
-## save zip config setting
+### save zip config setting
 
 ```
-$ env-konf zip-config --profile=test --encode-password=password --zip-path=./test.zip
+$ env-konf zip-config --profile=test --check-password=password --zip-path=./test.zip
+$ env-konf zip
+Password: **
+Password md5 miss match
+Password: ********
 ```
