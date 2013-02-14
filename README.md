@@ -18,12 +18,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### create prototype profile
 
-## Contributing
+ * you should edit profile manually after creating prototype profile
+```
+$ env-konf profile-init test
+  create /home/hoge/.env-konf/test.yaml
+```
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## get profile value at your source code
+
+```
+require 'env-konf'
+
+EnvKonf.profile = "test"
+p EnvKonf.get
+```
+
+## create profile zip protected password
+
+```
+$ env-konf zip test.zip --profile test
+Password: ********
+Retype password: ********
+```
+
+## unzip profile zip
+
+```
+$ env-konf unzip test.zip
+Password: ********
+```
+
+## save zip config setting
+
+```
+$ env-konf zip-config --profile=test --encode-password=password --zip-path=./test.zip
+```

@@ -3,6 +3,8 @@ load File.expand_path('../bin/env-konf', File.dirname(__FILE__))
 
 describe EnvKonfCommand do
   let(:profile) { "hoge" }
+  let(:zip_path) { "test/zip" }
+  let(:password) { "pass" }
 
   it "should get help message" do
     stdstr = capture(:stdout) {
@@ -33,10 +35,17 @@ describe EnvKonfCommand do
   it "should unzip" do
     EnvKonf.should_receive(:unzip) do |arg|
       arg[:force].should == true
-      arg[:password].should == "pass"
-      arg[:path].should == "test/zip"
+      arg[:password].should == password
+      arg[:path].should == zip_path
     end
-    EnvKonfCommand.run(%w|unzip -f -p pass test/zip|)
+    EnvKonfCommand.run(%W|unzip -f -p #{password} #{zip_path}|)
+  end
+
+  it "should zip-config" do
+    EnvKonf::Config.should_receive(:passwd_md5=).with(password)
+    EnvKonf::Config.should_receive(:zip_path=).with(zip_path)
+    EnvKonf::Config.should_receive(:profile=).with(profile)
+    EnvKonfCommand.run(%W|zip-config -p #{password} -z #{zip_path} -r #{profile}|)
   end
 end
 
