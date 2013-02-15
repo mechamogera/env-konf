@@ -14,14 +14,14 @@ describe EnvKonf::Config do
 
   it "should get nil if dir is not exist" do
     EnvKonf::Config.profile.should be_nil
-    EnvKonf::Config.zip_path.should be_nil
+    EnvKonf::Config.target_path.should be_nil
     EnvKonf::Config.passwd_md5.should be_nil
   end
 
   it "should get nil if file is not exist" do
     FileUtils.mkdir_p(File.dirname(EnvKonf::Config::FILE))
     EnvKonf::Config.profile.should be_nil
-    EnvKonf::Config.zip_path.should be_nil
+    EnvKonf::Config.target_path.should be_nil
     EnvKonf::Config.passwd_md5.should be_nil
   end
 
@@ -32,7 +32,7 @@ describe EnvKonf::Config do
   end
 
   it "should added values" do
-    [:profile, :zip_path].each do |target|
+    [:profile, :target_path].each do |target|
       EnvKonf::Config.send("#{target}=", target.to_s)
       EnvKonf::Config.send(target).should == target.to_s
     end

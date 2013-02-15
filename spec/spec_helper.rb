@@ -24,3 +24,7 @@ def capture(stream)
   end
   result
 end
+
+def test_data_path(file = nil)
+  File.expand_path(file ? File.join("data", file) : "data", File.dirname(__FILE__))
+end

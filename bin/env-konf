@@ -65,7 +65,7 @@ Set configuration options
          opt.separator "Options:"
          opt.on("-p", "--check-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
          opt.on("-r", "--profile=VAL",  "Set profile") { |v| @options[:profile] = v }
-         opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:zip_path] = v }
+         opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:target_path] = v }
        },
        "profile-init" => OptionParser.new { |opt|
          opt.banner = <<-EOB
@@ -145,7 +145,7 @@ No such subcommand `#{subcommand}'
 
   def cmd_zip_config
     EnvKonf::Config.passwd_md5 = @options[:check_password] if @options[:check_password]
-    EnvKonf::Config.zip_path = @options[:zip_path] if @options[:zip_path]
+    EnvKonf::Config.target_path = @options[:target_path] if @options[:target_path]
     EnvKonf::Config.profile = @options[:profile] if @options[:profile]
   end
 

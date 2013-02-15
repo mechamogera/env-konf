@@ -40,7 +40,7 @@ module EnvKonf
   def self.zip(options = {})
     path = options[:path]
     unless path
-      path = EnvKonf::Config.zip_path
+      path = EnvKonf::Config.target_path
       raise  ArgumentError.new("Need encode zip path") unless path
     end
 
@@ -58,7 +58,7 @@ module EnvKonf
   def self.unzip(options = {})
     path = options[:path]
     unless path
-      path = EnvKonf::Config.zip_path
+      path = EnvKonf::Config.target_path
       raise  ArgumentError.new("Need decode zip path") unless path
     end
 
@@ -73,28 +73,50 @@ module EnvKonf
   end
 
   def self.encode(options = {})
-    key = nil
-    File.open(options[:key]) do |f|
-      key = OpenSSL::PKey::RSA.new(f)
-    end
-
-    path = options[:path]
+    path = options[:path] || EnvKonf::Config.target_path
+    raise  ArgumentError.new("Need encode path") unless path
     profile = options[:profile] || EnvKonf::Config.profile
-    File.open(path, "wb") do |f|
-      f.write key.public_encrypt(File.read(profile_path(profile)))
+
+    profile_hist_save(:encode, profile, profile_path(profile), options[:force]) do
+      key = nil
+      File.open(options[:key]) do |f|
+        key = OpenSSL::PKey::RSA.new(f)
+      end
+
+      File.open(path, "wb") do |wf|
+        File.open(profile_path(profile), "r") do |rf|
+          while block = rf.read(32)
+            wf.write key.public_encrypt(block)
+          end
+        end
+      end
     end
   end
 
   def self.decode(options = {})
-    key = nil
-    File.open(options[:key]) do |f|
-      key = OpenSSL::PKey::RSA.new(f)
-    end
-
-    path = options[:path]
+    path = options[:path] || EnvKonf::Config.target_path
+    raise  ArgumentError.new("Need decode path") unless path unless path
     profile = options[:profile] || EnvKonf::Config.profile
-    File.open(profile_path(profile), "w") do |f|
-      f.write key.private_decrypt(File.binread(path))
+
+    profile_hist_save(:decode, profile, path, options[:force]) do
+      key = nil
+      File.open(options[:key]) do |f|
+        key = OpenSSL::PKey::RSA.new(f)
+      end
+
+      File.open(profile_path(profile), "w") do |wf|
+        File.open(profile_path(profile), "rb") do |rf|
+          wf.write key.private_decrypt(File.binread(path))
+        end
+      end
     end
+  end
+  
+  private
+
+  def self.profile_hist_save(type, profile, path, is_force, &block)
+    return if !is_force && EnvKonf::ProfileHist.send("match_#{type}d?", profile, path)
+    block.call
+    EnvKonf::ProfileHist.send("save_#{type}_md5", profile, path)
   end
 end
