@@ -59,7 +59,8 @@ describe EnvKonf do
 
     it "should encode and decode" do
       EnvKonf.should_receive(:profile_path).with(profile).twice.and_return(__FILE__)
-      EnvKonf.encode(:path => path, :profile => profile, :key => test_data_path("id_rsa"))
+      EnvKonf.encode(:path => path, :profile => profile, :key => test_data_path("id_rsa_pub"))
+      EnvKonf.decode(:path => path, :profile => profile, :key => test_data_path("id_rsa"))
     end
   end
 end

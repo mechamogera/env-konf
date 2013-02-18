@@ -73,40 +73,32 @@ module EnvKonf
   end
 
   def self.encode(options = {})
+    cipher = Cipher.new
+
     path = options[:path] || EnvKonf::Config.target_path
     raise  ArgumentError.new("Need encode path") unless path
     profile = options[:profile] || EnvKonf::Config.profile
 
     profile_hist_save(:encode, profile, profile_path(profile), options[:force]) do
-      key = nil
-      File.open(options[:key]) do |f|
-        key = OpenSSL::PKey::RSA.new(f)
-      end
-
       File.open(path, "wb") do |wf|
         File.open(profile_path(profile), "r") do |rf|
-          while block = rf.read(32)
-            wf.write key.public_encrypt(block)
-          end
+          wf.write cipher.encode(rf.read, options[:key])
         end
       end
     end
   end
 
   def self.decode(options = {})
+    cipher = Cipher.new
+
     path = options[:path] || EnvKonf::Config.target_path
     raise  ArgumentError.new("Need decode path") unless path unless path
     profile = options[:profile] || EnvKonf::Config.profile
 
     profile_hist_save(:decode, profile, path, options[:force]) do
-      key = nil
-      File.open(options[:key]) do |f|
-        key = OpenSSL::PKey::RSA.new(f)
-      end
-
       File.open(profile_path(profile), "w") do |wf|
         File.open(profile_path(profile), "rb") do |rf|
-          wf.write key.private_decrypt(File.binread(path))
+          wf.write cipher.decode(rf, options[:key])
         end
       end
     end

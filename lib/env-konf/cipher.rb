@@ -16,14 +16,16 @@ module EnvKonf
       salt + [enc_password.size].pack("N") + enc_password + encrypt(data, salt, password)
     end
 
-    def decode(data, key_path)
-      data = StringIO.new(data) if data.class == String
+    def decode(encoded_data, key_path)
+      data = (encoded_data.class == String) ? StringIO.new(encoded_data) : encoded_data
       key = create_key(key_path)
       salt = data.read(8)
       password_size = data.read(4).unpack("N")[0]
       password = key.private_decrypt(data.read(password_size))
 
       decrypt(data.read, salt, password)
+    ensure
+      data.close if encoded_data.class == String
     end
 
     private
