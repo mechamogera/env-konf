@@ -55,10 +55,12 @@ describe EnvKonf do
     end
 
     let(:profile) { "test" }
-    let(:path) { "./test.zip" }
+    let(:path) { "./test.dat" }
 
-    it "should encode and decode" do
-      EnvKonf.should_receive(:profile_path).with(profile).twice.and_return(__FILE__)
+    it "should encode and decode process" do
+      FileUtils.cp(__FILE__, "./target")
+      EnvKonf.should_receive(:profile_path).with(profile).exactly(3).and_return("./target")
+
       EnvKonf.encode(:path => path, :profile => profile, :key => test_data_path("id_rsa_pub"))
       EnvKonf.decode(:path => path, :profile => profile, :key => test_data_path("id_rsa"))
     end

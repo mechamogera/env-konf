@@ -5,6 +5,9 @@ describe EnvKonfCommand do
   let(:profile) { "hoge" }
   let(:target_path) { "test/zip" }
   let(:password) { "pass" }
+  let(:key) { "key" }
+  let(:encode_key) { "enc_key" }
+  let(:decode_key) { "dec_key" }
 
   it "should get help message" do
     stdstr = capture(:stdout) {
@@ -45,7 +48,29 @@ describe EnvKonfCommand do
     EnvKonf::Config.should_receive(:passwd_md5=).with(password)
     EnvKonf::Config.should_receive(:target_path=).with(target_path)
     EnvKonf::Config.should_receive(:profile=).with(profile)
-    EnvKonfCommand.run(%W|zip-config -p #{password} -z #{target_path} -r #{profile}|)
+    EnvKonf::Config.should_receive(:encode_key=).with(encode_key)
+    EnvKonf::Config.should_receive(:decode_key=).with(decode_key)
+    EnvKonfCommand.run(%W|zip-config -p #{password} -z #{target_path} -r #{profile} --rsa-encode-key #{encode_key} --rsa-decode-key #{decode_key}|)
+  end
+
+  it "should encode" do
+    EnvKonf.should_receive(:encode) do |arg|
+      arg[:force].should == true
+      arg[:key].should == key
+      arg[:path].should == target_path
+      arg[:profile].should == profile
+    end
+    EnvKonfCommand.run(%W|encode #{target_path} -f -k #{key} --profile #{profile}|)
+  end
+
+  it "should decode" do
+    EnvKonf.should_receive(:decode) do |arg|
+      arg[:force].should == true
+      arg[:key].should == key
+      arg[:path].should == target_path
+      arg[:profile].should == profile
+    end
+    EnvKonfCommand.run(%W|decode #{target_path} -f -k #{key} --profile #{profile}|)
   end
 end
 

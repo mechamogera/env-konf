@@ -82,7 +82,7 @@ module EnvKonf
     profile_hist_save(:encode, profile, profile_path(profile), options[:force]) do
       File.open(path, "wb") do |wf|
         File.open(profile_path(profile), "r") do |rf|
-          wf.write cipher.encode(rf.read, options[:key])
+          wf.write cipher.encode(rf.read, options[:key] || EnvKonf::Config.encode_key)
         end
       end
     end
@@ -97,8 +97,8 @@ module EnvKonf
 
     profile_hist_save(:decode, profile, path, options[:force]) do
       File.open(profile_path(profile), "w") do |wf|
-        File.open(profile_path(profile), "rb") do |rf|
-          wf.write cipher.decode(rf, options[:key])
+        File.open(path, "rb") do |rf|
+          wf.write cipher.decode(rf, options[:key] || EnvKonf::Config.decode_key)
         end
       end
     end

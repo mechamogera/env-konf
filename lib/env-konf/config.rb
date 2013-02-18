@@ -7,7 +7,7 @@ module EnvKonf
     FILE = ".env-konf/config.yml"
 
     class << self
-      [:profile, :target_path].each do |method|
+      [:decode_key, :encode_key, :profile, :target_path].each do |method|
         define_method(method) { read[method] }
         define_method("#{method}=") { |value| add(method, value) }
       end
