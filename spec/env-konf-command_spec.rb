@@ -46,13 +46,13 @@ describe EnvKonfCommand do
     EnvKonfCommand.run(%W|unzip -f -p #{password} #{target_path}|)
   end
 
-  it "should zip-config" do
+  it "should config" do
     EnvKonf::Config.should_receive(:passwd_md5=).with(password)
     EnvKonf::Config.should_receive(:target_path=).with(target_path)
     EnvKonf::Config.should_receive(:profile=).with(profile)
     EnvKonf::Config.should_receive(:encode_key=).with(encode_key)
     EnvKonf::Config.should_receive(:decode_key=).with(decode_key)
-    EnvKonfCommand.run(%W|zip-config -p #{password} -z #{target_path} -r #{profile} --rsa-encode-key #{encode_key} --rsa-decode-key #{decode_key}|)
+    EnvKonfCommand.run(%W|config -p #{password} -t #{target_path} -r #{profile} --rsa-encode-key #{encode_key} --rsa-decode-key #{decode_key}|)
   end
 
   it "should encode" do

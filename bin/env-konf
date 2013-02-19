@@ -30,7 +30,7 @@ Show help of subcommand.
           opt.banner = <<-EOB
 Usage: #{NAME} zip <zippath>
 
-Encode profile to <zippath>
+Zip profile to <zippath>
           EOB
 
           opt.separator ""
@@ -44,14 +44,14 @@ Encode profile to <zippath>
           opt.banner = <<-EOB
 Usage: #{NAME} unzip <zippath>
 
-Decode to profile from <zippath>
+Unzip to profile from <zippath>
           EOB
 
           opt.separator ""
 
           opt.separator "Options:"
           opt.on("-p", "--password=VAL", "Specify decoding password") { |v| @options[:password] = v }
-          opt.on("-f", "--force", "Zip forced") { @options[:force] = true }
+          opt.on("-f", "--force", "Unzip forced") { @options[:force] = true }
        },
        "encode" => OptionParser.new { |opt|
           opt.banner = <<-EOB
@@ -65,7 +65,7 @@ Encode to <encoded_path> from profile using rsa key
           opt.separator "Options:"
           opt.on("-k", "--rsa-key=VAL", "Specify rsa key path") { |v| @options[:key] = v }
           opt.on("--profile=VAL", "Specify profile") { |v| @options[:profile] = v }
-          opt.on("-f", "--force", "Zip forced") { @options[:force] = true }
+          opt.on("-f", "--force", "Encode forced") { @options[:force] = true }
        },
        "decode" => OptionParser.new { |opt|
           opt.banner = <<-EOB
@@ -79,11 +79,11 @@ Decode to profile from <encoded_path> using rsa key
           opt.separator "Options:"
           opt.on("-k", "--rsa-key=VAL", "Specify rsa key path") { |v| @options[:key] = v }
           opt.on("--profile=VAL", "Specify profile") { |v| @options[:profile] = v }
-          opt.on("-f", "--force", "Zip forced") { @options[:force] = true }
+          opt.on("-f", "--force", "Decode forced") { @options[:force] = true }
        },
-       "zip-config" => OptionParser.new { |opt|
+       "config" => OptionParser.new { |opt|
          opt.banner = <<-EOB
-Usage: #{NAME} zip-config
+Usage: #{NAME} config
 
 Set configuration options
          EOB
@@ -93,9 +93,9 @@ Set configuration options
          opt.separator "Options:"
          opt.on("-p", "--check-password=VAL", "Set password hash for checing password of encoding") { |v| @options[:check_password] = v }
          opt.on("-r", "--profile=VAL",  "Set profile") { |v| @options[:profile] = v }
-         opt.on("-z", "--zip-path=VAL", "Set zippath") { |v| @options[:target_path] = v }
-         opt.on("-k", "--rsa-encode-key=VAL", "Specify rsa key path for encode") { |v| @options[:encode_key] = v }
-         opt.on("-k", "--rsa-decode-key=VAL", "Specify rsa key path for decode") { |v| @options[:decode_key] = v }
+         opt.on("-t", "--target-path=VAL", "Set zippath") { |v| @options[:target_path] = v }
+         opt.on("-e", "--rsa-encode-key=VAL", "Specify rsa key path for encode") { |v| @options[:encode_key] = v }
+         opt.on("-d", "--rsa-decode-key=VAL", "Specify rsa key path for decode") { |v| @options[:decode_key] = v }
        },
        "profile-init" => OptionParser.new { |opt|
          opt.banner = <<-EOB
@@ -205,12 +205,13 @@ No such subcommand `#{subcommand}'
     end
   end
 
-  def cmd_zip_config
+  def cmd_config
     EnvKonf::Config.passwd_md5 = @options[:check_password] if @options[:check_password]
     EnvKonf::Config.target_path = @options[:target_path] if @options[:target_path]
     EnvKonf::Config.profile = @options[:profile] if @options[:profile]
     EnvKonf::Config.encode_key = @options[:encode_key] if @options[:encode_key]
     EnvKonf::Config.decode_key = @options[:decode_key] if @options[:decode_key]
+    puts "  update #{EnvKonf::Config::FILE}"
   end
 
   def cmd_profile_init

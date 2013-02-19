@@ -4,6 +4,7 @@ require "env-konf/zip"
 require "env-konf/profile_hist"
 require "env-konf/input"
 require "env-konf/config"
+require 'env-konf/cipher'
 
 require 'yaml'
 require 'openssl'
