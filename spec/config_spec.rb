@@ -19,7 +19,7 @@ describe EnvKonf::Config do
   end
 
   it "should get nil if file is not exist" do
-    FileUtils.mkdir_p(File.dirname(EnvKonf::Config::FILE))
+    FileUtils.mkdir_p(File.dirname(EnvKonf::Config.file_path))
     [:profile, :target_path, :passwd_md5, :encode_key, :decode_key].each do |method|
       EnvKonf::Config.send(method).should be_nil
     end
@@ -28,7 +28,7 @@ describe EnvKonf::Config do
   it "should exist file if added value and not exist file" do
     profile = "hoge"
     EnvKonf::Config.profile = profile
-    File.exist?(EnvKonf::Config::FILE).should be_true
+    File.exist?(EnvKonf::Config.file_path).should be_true
   end
 
   it "should added values" do

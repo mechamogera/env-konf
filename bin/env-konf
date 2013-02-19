@@ -211,7 +211,7 @@ No such subcommand `#{subcommand}'
     EnvKonf::Config.profile = @options[:profile] if @options[:profile]
     EnvKonf::Config.encode_key = @options[:encode_key] if @options[:encode_key]
     EnvKonf::Config.decode_key = @options[:decode_key] if @options[:decode_key]
-    puts "  update #{EnvKonf::Config::FILE}"
+    puts "  update #{EnvKonf::Config.file_path}"
   end
 
   def cmd_profile_init

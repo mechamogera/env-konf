@@ -27,20 +27,12 @@ describe EnvKonf::ProfileHist do
     md5_obj = double("md5_obj", :hexdigest => md5)
     Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
 
-    mkdir_p_original = FileUtils.method(:mkdir_p)
-    FileUtils.should_receive(:mkdir_p).with(
-      File.dirname(EnvKonf::ProfileHist::FILE)
-    ) { mkdir_p_original.call(File.dirname(profile_path)) }
-    
-    new_original = YAML::Store.method(:new)
-    YAML::Store.should_receive(:new).with(EnvKonf::ProfileHist::FILE) {
-      new_original.call(profile_path)
-    }
+    EnvKonf::ProfileHist.stub(:file_path).and_return(profile_path)
 
     EnvKonf::ProfileHist.save_encode_md5(profile, source)
     YAML.load_file(profile_path).should == {profile => { :encode_md5 => md5 }}
 
-    YAML.should_receive(:load_file).twice.with(EnvKonf::ProfileHist::FILE).and_return(profile => { :encode_md5 => md5 })
+    YAML.should_receive(:load_file).twice.with(EnvKonf::ProfileHist.file_path).and_return(profile => { :encode_md5 => md5 })
     EnvKonf::ProfileHist.match_encoded?(profile, source).should be_true
 
     Digest::MD5.should_receive(:file).with(__FILE__).and_call_original
@@ -51,20 +43,12 @@ describe EnvKonf::ProfileHist do
     md5_obj = double("md5_obj", :hexdigest => md5)
     Digest::MD5.should_receive(:file).twice.with(source).and_return(md5_obj)
 
-    mkdir_p_original = FileUtils.method(:mkdir_p)
-    FileUtils.should_receive(:mkdir_p).with(
-      File.dirname(EnvKonf::ProfileHist::FILE)
-    ) { mkdir_p_original.call(File.dirname(profile_path)) }
-    
-    new_original = YAML::Store.method(:new)
-    YAML::Store.should_receive(:new).with(EnvKonf::ProfileHist::FILE) {
-      new_original.call(profile_path)
-    }
+    EnvKonf::ProfileHist.stub(:file_path).and_return(profile_path)
 
     EnvKonf::ProfileHist.save_decode_md5(profile, source)
     YAML.load_file(profile_path).should == {profile => { :decode_md5 => md5 }}
     
-    YAML.should_receive(:load_file).twice.with(EnvKonf::ProfileHist::FILE).and_return(profile => { :decode_md5 => md5 })
+    YAML.should_receive(:load_file).twice.with(EnvKonf::ProfileHist.file_path).and_return(profile => { :decode_md5 => md5 })
     EnvKonf::ProfileHist.match_decoded?(profile, source).should be_true
 
     Digest::MD5.should_receive(:file).with(__FILE__).and_call_original

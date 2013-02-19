@@ -4,7 +4,9 @@ require 'digest/md5'
 
 module EnvKonf
   module Config
-    FILE = ".env-konf/config.yml"
+    def self.file_path
+      ".env-konf/config.yml"
+    end
 
     class << self
       [:decode_key, :encode_key, :profile, :target_path].each do |method|
@@ -30,16 +32,16 @@ module EnvKonf
 
     def self.read
       begin
-        YAML.load_file(FILE)
+        YAML.load_file(file_path)
       rescue Errno::ENOENT, Errno::ENOTDIR
         {}
       end
     end
 
     def self.add(key, value)
-      FileUtils.mkdir_p(File.dirname(FILE))
+      FileUtils.mkdir_p(File.dirname(file_path))
 
-      store = YAML::Store.new(FILE)
+      store = YAML::Store.new(file_path)
       store.transaction do
         store[key] = value
       end

@@ -5,11 +5,12 @@ require File.expand_path('config', File.dirname(__FILE__))
 
 module EnvKonf
   module ProfileHist
-    Directory = File.expand_path(File.join("~", ".env-konf"))
-    FILE = File.join(Directory, ".profile_hist")
-
     def self.directory
-      Directory
+      File.expand_path(File.join("~", ".env-konf"))
+    end
+
+    def self.file_path
+      File.join(directory, ".profile_hist")
     end
 
     def self.save_encode_md5(profile, source)
@@ -36,18 +37,19 @@ module EnvKonf
 
     def self.read
       begin
-        YAML.load_file(FILE)
+        YAML.load_file(file_path) || {}
       rescue Errno::ENOENT, Errno::ENOTDIR
         {}
       end
     end
 
     def self.write(key, value)
-      FileUtils.mkdir_p(File.dirname(FILE))
+      FileUtils.mkdir_p(File.dirname(file_path))
 
-      store = YAML::Store.new(FILE)
+      store = YAML::Store.new(file_path)
       store.transaction do
-        store[key] = value
+        bef_val = read[key]
+        store[key] = bef_val ? bef_val.merge(value) : value
       end
     end
   end

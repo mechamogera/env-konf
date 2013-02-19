@@ -33,7 +33,10 @@ describe EnvKonfCommand do
       arg[:path].should == target_path
       {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
-    EnvKonfCommand.run(%W|zip -f -p #{password} #{target_path}|)
+
+    capture(:stdout) {
+      EnvKonfCommand.run(%W|zip -f -p #{password} #{target_path}|)
+    }
   end
 
   it "should unzip" do
@@ -43,7 +46,10 @@ describe EnvKonfCommand do
       arg[:path].should == target_path
       {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
-    EnvKonfCommand.run(%W|unzip -f -p #{password} #{target_path}|)
+
+    capture(:stdout) {
+      EnvKonfCommand.run(%W|unzip -f -p #{password} #{target_path}|)
+    }
   end
 
   it "should config" do
@@ -52,7 +58,10 @@ describe EnvKonfCommand do
     EnvKonf::Config.should_receive(:profile=).with(profile)
     EnvKonf::Config.should_receive(:encode_key=).with(encode_key)
     EnvKonf::Config.should_receive(:decode_key=).with(decode_key)
-    EnvKonfCommand.run(%W|config -p #{password} -t #{target_path} -r #{profile} --rsa-encode-key #{encode_key} --rsa-decode-key #{decode_key}|)
+
+    capture(:stdout) {
+      EnvKonfCommand.run(%W|config -p #{password} -t #{target_path} -r #{profile} --rsa-encode-key #{encode_key} --rsa-decode-key #{decode_key}|)
+    }
   end
 
   it "should encode" do
@@ -63,7 +72,10 @@ describe EnvKonfCommand do
       arg[:profile].should == profile
       {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
-    EnvKonfCommand.run(%W|encode #{target_path} -f -k #{key} --profile #{profile}|)
+
+    capture(:stdout) {
+      EnvKonfCommand.run(%W|encode #{target_path} -f -k #{key} --profile #{profile}|)
+    }
   end
 
   it "should decode" do
@@ -74,7 +86,10 @@ describe EnvKonfCommand do
       arg[:profile].should == profile
       {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
-    EnvKonfCommand.run(%W|decode #{target_path} -f -k #{key} --profile #{profile}|)
+
+    capture(:stdout) {
+      EnvKonfCommand.run(%W|decode #{target_path} -f -k #{key} --profile #{profile}|)
+    }
   end
 end
 
