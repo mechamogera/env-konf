@@ -164,25 +164,45 @@ No such subcommand `#{subcommand}'
   def cmd_zip
     path, = @argv
     @options[:path] = path
-    EnvKonf.zip(@options)
+    result = EnvKonf.zip(@options)
+    if result[:is_skip]
+      puts "  skip zip"
+    else
+      puts "  zip to #{result[:target_path]} from #{result[:profile_path]}"
+    end
   end
 
   def cmd_unzip
     path, = @argv
     @options[:path] = path
-    EnvKonf.unzip(@options)
+    result = EnvKonf.unzip(@options)
+    if result[:is_skip]
+      puts "  skip unzip"
+    else
+      puts "  unzip to #{result[:profile_path]} from #{result[:target_path]}"
+    end
   end
 
   def cmd_encode
     path, = @argv
     @options[:path] = path
-    EnvKonf.encode(@options)
+    result = EnvKonf.encode(@options)
+    if result[:is_skip]
+      puts "  skip encode"
+    else
+      puts "  encode to #{result[:target_path]} from #{result[:profile_path]}"
+    end
   end
 
   def cmd_decode
     path, = @argv
     @options[:path] = path
-    EnvKonf.decode(@options)
+    result = EnvKonf.decode(@options)
+    if result[:is_skip]
+      puts "  skip decode"
+    else
+      puts "  decode to #{result[:profile_path]} from #{result[:target_path]}"
+    end
   end
 
   def cmd_zip_config

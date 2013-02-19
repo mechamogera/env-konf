@@ -29,10 +29,10 @@ describe EnvKonfCommand do
   it "should zip" do
     EnvKonf.should_receive(:zip) do |arg|
       arg[:force].should == true
-      arg[:password].should == "pass"
-      arg[:path].should == "test/zip"
+      arg[:password].should == password
+      arg[:path].should == target_path
     end
-    EnvKonfCommand.run(%w|zip -f -p pass test/zip|)
+    EnvKonfCommand.run(%W|zip -f -p #{password} #{target_path}|)
   end
 
   it "should unzip" do
