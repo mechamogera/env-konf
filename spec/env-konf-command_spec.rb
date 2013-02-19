@@ -31,6 +31,7 @@ describe EnvKonfCommand do
       arg[:force].should == true
       arg[:password].should == password
       arg[:path].should == target_path
+      {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
     EnvKonfCommand.run(%W|zip -f -p #{password} #{target_path}|)
   end
@@ -40,6 +41,7 @@ describe EnvKonfCommand do
       arg[:force].should == true
       arg[:password].should == password
       arg[:path].should == target_path
+      {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
     EnvKonfCommand.run(%W|unzip -f -p #{password} #{target_path}|)
   end
@@ -59,6 +61,7 @@ describe EnvKonfCommand do
       arg[:key].should == key
       arg[:path].should == target_path
       arg[:profile].should == profile
+      {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
     EnvKonfCommand.run(%W|encode #{target_path} -f -k #{key} --profile #{profile}|)
   end
@@ -69,6 +72,7 @@ describe EnvKonfCommand do
       arg[:key].should == key
       arg[:path].should == target_path
       arg[:profile].should == profile
+      {:profile_path => "a", :target_path => target_path, :is_skip => false}
     end
     EnvKonfCommand.run(%W|decode #{target_path} -f -k #{key} --profile #{profile}|)
   end

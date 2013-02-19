@@ -59,9 +59,10 @@ describe EnvKonf do
 
     it "should encode and decode process" do
       FileUtils.cp(__FILE__, "./target")
-      EnvKonf.should_receive(:profile_path).with(profile).exactly(3).and_return("./target")
+      EnvKonf.stub(:profile_path).with(profile).and_return("./target")
 
       EnvKonf.encode(:path => path, :profile => profile, :key => test_data_path("id_rsa_pub"))
+      File.exist?(path).should be_true
       EnvKonf.decode(:path => path, :profile => profile, :key => test_data_path("id_rsa"))
     end
   end
